@@ -1,0 +1,7 @@
+Log 1 APB:
+(+)database user dan share preference sudah bisa digunakan penggunaan ada pada bagian home dan profile
+(-)database user kekurangan 1 atribut phone number, database lainnya belum terpasang
+
+Log 2 APB(27/05/2023):
+(+)database user selesai untuk pemanggilan di homepage dan profile page, crud user sudah selesai
+(-)database lainnya belum terpasang
