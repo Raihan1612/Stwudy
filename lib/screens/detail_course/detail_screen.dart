@@ -1,17 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:tubes/database/kursus_database.dart';
+import 'package:tubes/sharePref/user_session.dart';
 
-class DetailCourseScreen extends StatelessWidget {
-  const DetailCourseScreen({super.key});
+class DetailCourseScreen extends StatefulWidget {
+  const DetailCourseScreen({Key? key}) : super(key: key);
+
+  @override
+  screen createState() => screen();
+}
+
+class screen extends State<DetailCourseScreen> {
+  List<Map<String, dynamic>> _dataKursus = [];
+  bool _isLoading = true;
+  int? _id;
+
+  Future<void> loadId() async {
+    int? temp = await UserSession.getKursus();
+    setState(() {
+      _id = temp;
+    });
+  }
+
+  Future<void> _refreshJournals(int id) async {
+    final dataKursus = await KursusTable.getKursus(id);
+    setState(() {
+      _dataKursus = dataKursus;
+      _isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadId().then((_) {
+      _refreshJournals(_id!);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    Map<String, dynamic> kursus;
+    if (!_dataKursus.isEmpty) {
+      kursus = _dataKursus[0];
+    } else {
+      kursus = {
+        'kursus_id': 0,
+      };
+    }
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
           color: Colors.black, // Change arrow color here
         ),
-        title: const Text(
-          "Judul Course",
+        title: Text(
+          " ${kursus['judul_kursus']}",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.transparent,
@@ -65,98 +108,52 @@ class DetailCourseScreen extends StatelessWidget {
                       height: 10,
                     ),
                     Container(
-                      height: 60,
-                      width: double.infinity,
-                      child: Row(
-                        children: [
-                          const Image(
-                              image: AssetImage("assets/images/detail_course.png")),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                "Episode 1",
-                                style: TextStyle(
-                                  fontSize: 11,
+                        height: 330,
+                        child: ListView.builder(
+                          itemCount: 2,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: InkWell(
+                                splashColor: Colors.purple.withAlpha(30),
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(
+                                    '/video',
+                                  );
+                                },
+                                child: Container(
+                                  height: 60,
+                                  width: double.infinity,
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                          "assets/images/detail_course.png"),
+                                      const SizedBox(width: 20),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Episode ${index + 1}",
+                                            style:
+                                                const TextStyle(fontSize: 11),
+                                          ),
+                                          Text(
+                                            "Introduction",
+                                            style:
+                                                const TextStyle(fontSize: 14),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                              Text(
-                                "Introduction",
-                                style: TextStyle(fontSize: 14),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      height: 60,
-                      width: double.infinity,
-                      child: Row(
-                        children: [
-                          const Image(
-                              image: AssetImage("assets/images/detail_course.png")),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                "Episode 2",
-                                style: TextStyle(
-                                  fontSize: 11,
-                                ),
-                              ),
-                              Text(
-                                "Introduction",
-                                style: TextStyle(fontSize: 14),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      height: 60,
-                      width: double.infinity,
-                      child: Row(
-                        children: [
-                          const Image(
-                              image: AssetImage("assets/images/detail_course.png")),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                "Episode 3",
-                                style: TextStyle(
-                                  fontSize: 11,
-                                ),
-                              ),
-                              Text(
-                                "Introduction",
-                                style: TextStyle(fontSize: 14),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    )
+                            );
+                          },
+                        )),
                   ],
                 ),
               ),

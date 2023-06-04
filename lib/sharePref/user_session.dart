@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,12 +20,17 @@ class UserSession {
 
   static Future<void> saveDataKursus(int data) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_sesId, data);
+    await prefs.setInt(_sesIdKursus, data);
   }
 
   static Future<int?> getId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getInt(_sesId);
+  }
+
+  static Future<int?> getKursus() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_sesIdKursus);
   }
 
   // static Future<String?> getName() async {
@@ -53,6 +56,7 @@ class UserSession {
   static Future<void> clearUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove(_sesId);
+    await prefs.remove(_sesIdKursus);
     // await prefs.remove(_sesName);
     // await prefs.remove(_sesUsername);
     // await prefs.remove(_sesEmail);
