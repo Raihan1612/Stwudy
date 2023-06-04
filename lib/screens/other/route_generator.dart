@@ -7,7 +7,9 @@ import 'package:tubes/screens/onboarding/onboarding_screen.dart';
 import 'package:tubes/screens/profile/profile_screen.dart';
 import 'package:tubes/screens/register/register_screen.dart';
 import 'package:tubes/screens/splash/splash_screen.dart';
-import 'package:tubes/test_data.dart';
+import 'package:tubes/screens/videosc/video_screen.dart';
+import 'package:tubes/testData/test_data.dart';
+import 'package:tubes/testData/test_kursus.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -28,8 +30,12 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => LoginScreen());
       case '/profile':
         return MaterialPageRoute(builder: (_) => UserProfileScreen());
+      case '/video':
+        return MaterialPageRoute(builder: (_) => VideoScreen());
       case '/test':
         return MaterialPageRoute(builder: (_) => testDB());
+      case '/test2':
+        return MaterialPageRoute(builder: (_) => testKursus());
       default:
         // If there is no such named route in the switch statement, e.g. /third
         return _errorRoute();

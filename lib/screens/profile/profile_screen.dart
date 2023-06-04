@@ -172,7 +172,6 @@ class screen extends State<UserProfileScreen> {
           children: [
             Center(
               child: Container(
-                color: Colors.red,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(135, 45, 135, 45),
                   child: Column(
@@ -182,8 +181,11 @@ class screen extends State<UserProfileScreen> {
                         Container(
                           width: 70,
                           height: 70,
-                          decoration: const BoxDecoration(
-                              shape: BoxShape.circle, color: Colors.grey),
+                          child: ClipOval(
+                            child: CircleAvatar(radius: 50,backgroundColor: Colors.black12,),
+                          ),
+                          // decoration: const BoxDecoration(
+                          //     shape: BoxShape.circle, color: Colors.grey),
                         ),
                         SizedBox(
                           height: 10,

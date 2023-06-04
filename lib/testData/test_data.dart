@@ -10,12 +10,13 @@ class testDB extends StatefulWidget {
 
 class _HomePageState extends State<testDB> {
   // All journals
+  UserTable user = UserTable();
   List<Map<String, dynamic>> _journals = [];
 
   bool _isLoading = true;
   // This function is used to fetch all data from the database
   void _refreshJournals() async {
-    final data = await UserTable.getUser(1);
+    final data = await UserTable.getAllUsers();
     setState(() {
       _journals = data;
       _isLoading = false;
@@ -24,14 +25,15 @@ class _HomePageState extends State<testDB> {
 
   @override
   void initState() {
-    super.initState();
-    _refreshJournals(); // Loading the diary when the app starts
+    super.initState();// Loading the diary when the app starts
+    _refreshJournals();
   }
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _imageController = TextEditingController();
 
   // This function will be triggered when the floating button is pressed
   // It will also be triggered when you want to update an item
@@ -45,6 +47,9 @@ class _HomePageState extends State<testDB> {
       _passwordController.text = existingJournal['password'];
       _emailController.text = existingJournal['email'];
       _nameController.text = existingJournal['name'];
+      if (existingJournal['userImage'] != null) {
+        _imageController.text = existingJournal['userImage'];
+      }
     }
 
     showModalBottomSheet(
@@ -91,14 +96,22 @@ class _HomePageState extends State<testDB> {
                   const SizedBox(
                     height: 20,
                   ),
+                  TextField(
+                    controller: _imageController,
+                    decoration: const InputDecoration(hintText: 'Description'),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   ElevatedButton(
                     onPressed: () async {
                       // Save new journal
                       User user = User(
-                          username: _usernameController.text,
-                          password: _passwordController.text,
-                          email: _emailController.text,
-                          name: _nameController.text);
+                        username: _usernameController.text,
+                        password: _passwordController.text,
+                        email: _emailController.text,
+                        name: _nameController.text,
+                      );
                       if (id == null) {
                         await _addItem(user);
                       }

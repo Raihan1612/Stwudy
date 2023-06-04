@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
+import 'package:tubes/database/kursus_database.dart';
 import 'package:tubes/database/subscription_database.dart';
 import 'package:tubes/database/user_database.dart';
 import 'package:tubes/screens/other/card_course.dart';
@@ -34,20 +35,23 @@ class HomeScreen extends StatefulWidget {
 
 class screen extends State<HomeScreen> {
   List<Map<String, dynamic>> _data = [];
+  List<Map<String, dynamic>> _dataKursus = [];
   bool _isLoading = true;
-  int _id = -1;
+  int? _id;
 
   Future<void> loadId() async {
     int? temp = await UserSession.getId();
     setState(() {
-      _id = temp!;
+      _id = temp;
     });
   }
 
   Future<void> _refreshJournals(int id) async {
     final data = await UserTable.getUser(id);
+    final dataKursus = await KursusTable.getAllKursus();
     setState(() {
       _data = data;
+      _dataKursus = dataKursus;
       _isLoading = false;
     });
   }
@@ -56,7 +60,7 @@ class screen extends State<HomeScreen> {
   void initState() {
     super.initState();
     loadId().then((_) {
-      _refreshJournals(_id);
+      _refreshJournals(_id!);
     });
   }
 
@@ -72,7 +76,11 @@ class screen extends State<HomeScreen> {
     }
     final _screen = MediaQuery.of(context).size;
     return Scaffold(
-      body: Padding(
+      body: _isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Padding(
         padding: const EdgeInsets.all(8),
         child: SafeArea(
           child: Column(
@@ -443,7 +451,7 @@ class screen extends State<HomeScreen> {
                     height: 165,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: card2.length,
+                      itemCount: _dataKursus.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Row(
                           children: [
@@ -464,7 +472,7 @@ class screen extends State<HomeScreen> {
                                     children: [
                                       Image(
                                           image:
-                                              AssetImage(card2[index].picture)),
+                                              AssetImage(_dataKursus[index]['kursusImage'])),
                                       const SizedBox(
                                         height: 10,
                                       ),
@@ -475,14 +483,14 @@ class screen extends State<HomeScreen> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                card2[index].category,
+                                                _dataKursus[index]['kategori'],
                                                 style: const TextStyle(
                                                     fontSize: 11,
                                                     fontWeight:
                                                         FontWeight.w500),
                                               ),
                                               Text(
-                                                card2[index].title,
+                                                _dataKursus[index]['judul_kursus'],
                                                 style: const TextStyle(
                                                     fontSize: 12,
                                                     fontWeight:
