@@ -27,14 +27,16 @@ class VideoTable {
   // }
 
   //Insert Table
-  static Future<int> createVideo(int kursus_id, String judul_video, String? deskripsi_video) async {
+  static Future<int> createVideo(
+      int kursus_id, String judul_video, String? deskripsi_video, String link_video) async {
     final db = await MainDatabase.openDB();
 
-    final data = { 
-      'kursus_id' : kursus_id,
+    final data = {
+      'kursus_id': kursus_id,
       'judul_video': judul_video,
       'deskripsi_video': deskripsi_video,
-      };
+      'link_video' : link_video
+    };
     final id = await db.insert('video', data,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
     return id;
@@ -59,14 +61,15 @@ class VideoTable {
   }
 
   //Update Data
-  static Future<int> updateVideo(
-      int id, int kursus_id, String judul_video, String? deskripsi_video) async {
+  static Future<int> updateVideo(int id, int kursus_id, String judul_video,
+      String? deskripsi_video, String link_video) async {
     final db = await MainDatabase.openDB();
 
     final data = {
-      'kursus_id' : kursus_id,
+      'kursus_id': kursus_id,
       'judul_video': judul_video,
       'deskripsi_video': deskripsi_video,
+      'link_video' : link_video
     };
 
     final result =

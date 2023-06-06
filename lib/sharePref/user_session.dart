@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserSession {
   static const String _sesId = 'id';
   static const String _sesIdKursus = 'idKursus';
+  static const String _sesKategori = 'kat';
   // static const String _sesName = 'name';
   // static const String _sesUsername = 'username';
   // static const String _sesEmail = 'email';
@@ -23,6 +24,11 @@ class UserSession {
     await prefs.setInt(_sesIdKursus, data);
   }
 
+  static Future<void> saveDataKategori(String data) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_sesKategori, data);
+  }
+
   static Future<int?> getId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getInt(_sesId);
@@ -31,6 +37,11 @@ class UserSession {
   static Future<int?> getKursus() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getInt(_sesIdKursus);
+  }
+
+  static Future<String?> getKategori() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_sesKategori);
   }
 
   // static Future<String?> getName() async {
@@ -57,9 +68,15 @@ class UserSession {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove(_sesId);
     await prefs.remove(_sesIdKursus);
+    await prefs.remove(_sesKategori);
     // await prefs.remove(_sesName);
     // await prefs.remove(_sesUsername);
     // await prefs.remove(_sesEmail);
     // await prefs.remove(_sesPassword);
+  }
+
+  static Future<void> clearKategori() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_sesKategori);
   }
 }

@@ -14,10 +14,10 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       title: 'Stwudy',
       debugShowCheckedModeBanner: false,
-      // initialRoute: '/register',
+      // initialRoute: '/course',
       // initialRoute: '/test',
-      initialRoute: '/test2',
-      // initialRoute: '/',
+      // initialRoute: '/test2',
+      initialRoute: '/',
       onGenerateRoute: RouteGenerator.generateRoute,
     );
   }

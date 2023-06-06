@@ -1,5 +1,3 @@
-
-
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:tubes/database/kursus_database.dart';
@@ -190,6 +188,7 @@ class screen extends State<HomeScreen> {
                                 child: InkWell(
                                   splashColor: Colors.purple.withAlpha(30),
                                   onTap: () {
+                                    UserSession.saveDataKategori("Design");
                                     Navigator.of(context).pushNamed(
                                       '/course',
                                     );
@@ -229,6 +228,7 @@ class screen extends State<HomeScreen> {
                                 child: InkWell(
                                   splashColor: Colors.purple.withAlpha(30),
                                   onTap: () {
+                                    UserSession.saveDataKategori("Market");
                                     Navigator.of(context).pushNamed(
                                       '/course',
                                     );
@@ -268,6 +268,7 @@ class screen extends State<HomeScreen> {
                                 child: InkWell(
                                   splashColor: Colors.purple.withAlpha(30),
                                   onTap: () {
+                                    UserSession.saveDataKategori("Coding");
                                     Navigator.of(context).pushNamed(
                                       '/course',
                                     );
@@ -307,6 +308,7 @@ class screen extends State<HomeScreen> {
                                 child: InkWell(
                                   splashColor: Colors.purple.withAlpha(30),
                                   onTap: () {
+                                    UserSession.saveDataKategori("Business");
                                     Navigator.of(context).pushNamed(
                                       '/course',
                                     );
@@ -361,6 +363,7 @@ class screen extends State<HomeScreen> {
                                     fontSize: 14),
                               ),
                               onPressed: () {
+                                UserSession.saveDataKategori("user");
                                 Navigator.of(context).pushNamed(
                                   '/course',
                                 );
@@ -400,25 +403,28 @@ class screen extends State<HomeScreen> {
                                             ),
                                             Row(
                                               children: [
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      card[index].category,
-                                                      style: const TextStyle(
-                                                          fontSize: 11,
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                    Text(
-                                                      card[index].title,
-                                                      style: const TextStyle(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                  ],
+                                                Padding(
+                                                  padding: const EdgeInsets.all(4.0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        card[index].category,
+                                                        style: const TextStyle(
+                                                            fontSize: 11,
+                                                            fontWeight:
+                                                                FontWeight.w500),
+                                                      ),
+                                                      Text(
+                                                        card[index].title,
+                                                        style: const TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.w500),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 )
                                               ],
                                             ),
@@ -452,6 +458,7 @@ class screen extends State<HomeScreen> {
                                     fontSize: 14),
                               ),
                               onPressed: () {
+                                UserSession.saveDataKategori("other");
                                 Navigator.of(context).pushNamed(
                                   '/course',
                                 );
@@ -472,7 +479,8 @@ class screen extends State<HomeScreen> {
                                     child: InkWell(
                                       splashColor: Colors.purple.withAlpha(30),
                                       onTap: () {
-                                        UserSession.saveDataKursus(_dataKursus[index]['kursus_id']);
+                                        UserSession.saveDataKursus(
+                                            _dataKursus[index]['kursus_id']);
                                         Navigator.of(context).pushNamed(
                                           "/detail_course",
                                         );
@@ -493,27 +501,30 @@ class screen extends State<HomeScreen> {
                                             ),
                                             Row(
                                               children: [
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      _dataKursus[index]
-                                                          ['kategori'],
-                                                      style: const TextStyle(
-                                                          fontSize: 11,
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                    Text(
-                                                      _dataKursus[index]
-                                                          ['judul_kursus'],
-                                                      style: const TextStyle(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                  ],
+                                                Padding(
+                                                  padding: const EdgeInsets.all(4.0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        _dataKursus[index]
+                                                            ['kategori'],
+                                                        style: const TextStyle(
+                                                            fontSize: 11,
+                                                            fontWeight:
+                                                                FontWeight.w500),
+                                                      ),
+                                                      Text(
+                                                        _dataKursus[index]
+                                                            ['judul_kursus'],
+                                                        style: const TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.w500),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 )
                                               ],
                                             ),

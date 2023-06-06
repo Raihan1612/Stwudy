@@ -10,6 +10,7 @@ import 'package:tubes/screens/splash/splash_screen.dart';
 import 'package:tubes/screens/videosc/video_screen.dart';
 import 'package:tubes/testData/test_data.dart';
 import 'package:tubes/testData/test_kursus.dart';
+import 'package:tubes/testData/test_video.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -36,6 +37,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => testDB());
       case '/test2':
         return MaterialPageRoute(builder: (_) => testKursus());
+      case '/test3':
+        return MaterialPageRoute(builder: (_) => testVideo());
       default:
         // If there is no such named route in the switch statement, e.g. /third
         return _errorRoute();

@@ -60,6 +60,13 @@ class KursusTable {
         where: "kursus_id = ?", whereArgs: [id], limit: 1);
   }
 
+  static Future<List<Map<String, dynamic>>> getKursusbyKat(String kat) async {
+    // final db = await kursusTable.db();
+    final db = await MainDatabase.openDB();
+    return db.query('kursus',
+        where: "kategori = ?", whereArgs: [kat]);
+  }
+
   //Update Data
   static Future<int> updateKursus(int id, String judul_kursus, kategori,
       String? deskripsi_kursus, String jumlah_video, String kursusImage) async {

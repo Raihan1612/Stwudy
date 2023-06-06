@@ -132,7 +132,7 @@ class Screen extends State<LoginScreen> {
                             borderRadius: BorderRadius.circular(20))),
                     child: const Text('Test DataBase'),
                     onPressed: () async {Navigator.of(context).pushNamed(
-                        '/video',
+                        '/test2',
                       );},
                   )),
               SizedBox(height: 16),

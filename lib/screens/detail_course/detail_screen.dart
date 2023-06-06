@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tubes/database/kursus_database.dart';
+import 'package:tubes/database/video_database.dart';
 import 'package:tubes/sharePref/user_session.dart';
 
 class DetailCourseScreen extends StatefulWidget {
@@ -11,6 +12,7 @@ class DetailCourseScreen extends StatefulWidget {
 
 class screen extends State<DetailCourseScreen> {
   List<Map<String, dynamic>> _dataKursus = [];
+  List<Map<String, dynamic>> _dataVideo = [];
   bool _isLoading = true;
   int? _id;
 
@@ -23,8 +25,10 @@ class screen extends State<DetailCourseScreen> {
 
   Future<void> _refreshJournals(int id) async {
     final dataKursus = await KursusTable.getKursus(id);
+    final dataVideo = await VideoTable.getVideoByKursus(id);
     setState(() {
       _dataKursus = dataKursus;
+      _dataVideo = dataVideo;
       _isLoading = false;
     });
   }
@@ -110,7 +114,7 @@ class screen extends State<DetailCourseScreen> {
                     Container(
                         height: 330,
                         child: ListView.builder(
-                          itemCount: 2,
+                          itemCount: _dataVideo.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 10),
@@ -141,7 +145,7 @@ class screen extends State<DetailCourseScreen> {
                                                 const TextStyle(fontSize: 11),
                                           ),
                                           Text(
-                                            "Introduction",
+                                            _dataVideo[index]['judul_video'],
                                             style:
                                                 const TextStyle(fontSize: 14),
                                           ),
@@ -163,16 +167,35 @@ class screen extends State<DetailCourseScreen> {
       ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.only(left: 8, right: 8, bottom: 20),
-        child: ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            primary: Colors.blue,
-            onPrimary: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.0),
+        child: Row(
+          children: [
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                fixedSize: Size(355, 30),
+                primary: Colors.blue,
+                onPrimary: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
+              ),
+              child: Text('Start Course'),
             ),
-          ),
-          child: Text('Start Course'),
+            SizedBox(
+              width: 5,
+            ),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blue,
+                onPrimary: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
+              ),
+              child: Icon(Icons.shopping_cart),
+            ),
+          ],
         ),
       ),
     );
