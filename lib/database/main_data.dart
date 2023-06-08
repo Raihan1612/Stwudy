@@ -2,6 +2,7 @@
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart';
 import 'package:tubes/database/kursus_database.dart';
+import 'package:tubes/database/subscription_database.dart';
 import 'package:tubes/database/user_database.dart';
 import 'package:tubes/database/video_database.dart';
 
@@ -14,6 +15,7 @@ class MainDatabase {
       await UserTable.createTables(db);
       await KursusTable.createTables(db);
       await VideoTable.createTables(db);
+      await SubsTable.createTables(db);
       // Create other tables here
     });
   }

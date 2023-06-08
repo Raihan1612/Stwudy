@@ -135,6 +135,18 @@ class Screen extends State<LoginScreen> {
                         '/test2',
                       );},
                   )),
+                  Container(
+                  height: 50,
+                  padding: const EdgeInsets.fromLTRB(10, 15, 10, 0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20))),
+                    child: const Text('Test DataBase'),
+                    onPressed: () async {Navigator.of(context).pushNamed(
+                        '/test3',
+                      );},
+                  )),
               SizedBox(height: 16),
               Row(
                 children: <Widget>[

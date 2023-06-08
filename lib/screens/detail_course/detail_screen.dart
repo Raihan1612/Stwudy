@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tubes/database/kursus_database.dart';
+import 'package:tubes/database/subscription_database.dart';
 import 'package:tubes/database/video_database.dart';
 import 'package:tubes/sharePref/user_session.dart';
 
@@ -13,22 +14,29 @@ class DetailCourseScreen extends StatefulWidget {
 class screen extends State<DetailCourseScreen> {
   List<Map<String, dynamic>> _dataKursus = [];
   List<Map<String, dynamic>> _dataVideo = [];
+  List<Map<String, dynamic>> _dataSubs = [];
   bool _isLoading = true;
-  int? _id;
+  bool _isSubscribe = false;
+  int? _idUser;
+  int? _idKursus;
 
   Future<void> loadId() async {
-    int? temp = await UserSession.getKursus();
+    int? tempUser = await UserSession.getId();
+    int? tempKursus = await UserSession.getKursus();
     setState(() {
-      _id = temp;
+      _idUser = tempUser;
+      _idKursus = tempKursus;
     });
   }
 
-  Future<void> _refreshJournals(int id) async {
-    final dataKursus = await KursusTable.getKursus(id);
-    final dataVideo = await VideoTable.getVideoByKursus(id);
+  Future<void> _refreshJournals(int idUser, int idKursus) async {
+    final dataKursus = await KursusTable.getKursus(idUser);
+    final dataVideo = await VideoTable.getVideoByKursus(idUser);
+    final dataSubs = await SubsTable.getSubscriptionById(idUser, idKursus);
     setState(() {
       _dataKursus = dataKursus;
       _dataVideo = dataVideo;
+      _dataSubs = dataSubs;
       _isLoading = false;
     });
   }
@@ -37,8 +45,54 @@ class screen extends State<DetailCourseScreen> {
   void initState() {
     super.initState();
     loadId().then((_) {
-      _refreshJournals(_id!);
+      _refreshJournals(_idUser!, _idKursus!);
     });
+  }
+
+  void showPaymentModal(int idUser, int idKursus) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Course Payment',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Please proceed with the payment to access the course content.',
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  SubsTable.createSubscription(idUser, idKursus);
+                  Navigator.of(context).pushNamed(
+                          '/home',
+                        );
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.blue,
+                  onPrimary: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                child: const Text('Proceed to Payment'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -120,11 +174,21 @@ class screen extends State<DetailCourseScreen> {
                               padding: const EdgeInsets.only(bottom: 10),
                               child: InkWell(
                                 splashColor: Colors.purple.withAlpha(30),
-                                onTap: () {
-                                  Navigator.of(context).pushNamed(
-                                    '/video',
-                                  );
-                                },
+                                onTap: _isSubscribe
+                                    ? () {
+                                        Navigator.of(context).pushNamed(
+                                          '/video',
+                                        );
+                                      }
+                                    : () {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: const Text(
+                                                "You are not subscribed to this course."),
+                                          ),
+                                        );
+                                      },
                                 child: Container(
                                   height: 60,
                                   width: double.infinity,
@@ -170,7 +234,15 @@ class screen extends State<DetailCourseScreen> {
         child: Row(
           children: [
             ElevatedButton(
-              onPressed: () {},
+              onPressed: _isSubscribe
+                  ? () {
+                      Navigator.of(context).pushNamed(
+                        '/video',
+                      );
+                    }
+                  : () {
+                      showPaymentModal(_idUser!, _idKursus!);
+                    },
               style: ElevatedButton.styleFrom(
                 fixedSize: Size(355, 30),
                 primary: Colors.blue,

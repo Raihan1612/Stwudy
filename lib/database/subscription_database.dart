@@ -1,83 +1,86 @@
-// import 'package:flutter/cupertino.dart';
-// import 'package:sqflite/sqflite.dart' as sql;
+import 'package:flutter/cupertino.dart';
+import 'package:sqflite/sqflite.dart' as sql;
+import 'package:tubes/database/main_data.dart';
 
-// class SQLHelper {
-//   // Data Table
-//   static Future<void> createTables(sql.Database database) async {
-//     await database.execute("""CREATE TABLE items(
-//         subscription_id TEXT PRIMARY KEY,
-//         kursus_id TEXT REFERENCES Kursus(kursus_id),
-//         harga INTEGER,
-//         createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-//       )
-//       """);
-//   }
+class SubsTable {
+  // Data Table
+  static Future<void> createTables(sql.Database database) async {
+    await database.execute("""CREATE TABLE subscription(
+        user_id int,
+        kursus_id int
+      )
+      """);
+  }
 
-//   // Create Table
-//   static Future<sql.Database> db() async {
-//     return sql.openDatabase(
-//       'test.db',
-//       version: 1,
-//       onCreate: (sql.Database database, int version) async {
-//         await createTables(database);
-//       },
-//     );
-//   }
+  // Insert Table
+  static Future<int> createSubscription(
+      int userId, int kursusId) async {
+    final db = await MainDatabase.openDB();
 
-//   // Insert Table
-//   static Future<int> createItem(
-//       String subscriptionId, String kursusId, int harga) async {
-//     final db = await SQLHelper.db();
+    final data = {
+      'user_id': userId,
+      'kursus_id': kursusId,
+    };
+    final id = await db.insert('subscription', data,
+        conflictAlgorithm: sql.ConflictAlgorithm.replace);
+    return id;
+  }
 
-//     final data = {
-//       'subscription_id': subscriptionId,
-//       'kursus_id': kursusId,
-//       'harga': harga
-//     };
-//     final id = await db.insert('items', data,
-//         conflictAlgorithm: sql.ConflictAlgorithm.replace);
-//     return id;
-//   }
+  // Get Specified Data
+  static Future<List<Map<String, dynamic>>> getAllSubscriptionById(
+      int userId) async {
+    final db = await MainDatabase.openDB();
+    return db.query('subscription',
+        where: "user_id = ?", whereArgs: [userId]);
+  }
 
-//   // Get All Data
-//   static Future<List<Map<String, dynamic>>> getItems() async {
-//     final db = await SQLHelper.db();
-//     return db.query('items', orderBy: "subscription_id");
-//   }
+  // Get Specified Data
+  static Future<List<Map<String, dynamic>>> getSubscriptionById(
+      int userId, int kursusId) async {
+    final db = await MainDatabase.openDB();
+    return db.query('subscription',
+        where: "user_id = ? AND kursus_id = ?", whereArgs: [userId,kursusId], limit: 1);
+  }
 
-//   // Get Specified Data
-//   static Future<List<Map<String, dynamic>>> getItem(
-//       String subscriptionId) async {
-//     final db = await SQLHelper.db();
-//     return db.query('items',
-//         where: "subscription_id = ?", whereArgs: [subscriptionId], limit: 1);
-//   }
+  // Get All Data
+  // static Future<List<Map<String, dynamic>>> getItems() async {
+  //   final db = await SQLHelper.db();
+  //   return db.query('subscription', orderBy: "subscription_id");
+  // }
 
-//   // Update Data
-//   static Future<int> updateItem(
-//       String subscriptionId, String kursusId, int harga) async {
-//     final db = await SQLHelper.db();
+  // // Get Specified Data
+  // static Future<List<Map<String, dynamic>>> getItem(
+  //     String subscriptionId) async {
+  //   final db = await SQLHelper.db();
+  //   return db.query('subscription',
+  //       where: "subscription_id = ?", whereArgs: [subscriptionId], limit: 1);
+  // }
 
-//     final data = {
-//       'subscription_id': subscriptionId,
-//       'kursus_id': kursusId,
-//       'harga': harga,
-//       'createdAt': DateTime.now().toString()
-//     };
+  // // Update Data
+  // static Future<int> updateItem(
+  //     String subscriptionId, String kursusId, int harga) async {
+  //   final db = await SQLHelper.db();
 
-//     final result = await db.update('items', data,
-//         where: "subscription_id = ?", whereArgs: [subscriptionId]);
-//     return result;
-//   }
+  //   final data = {
+  //     'subscription_id': subscriptionId,
+  //     'kursus_id': kursusId,
+  //     'harga': harga,
+  //     'createdAt': DateTime.now().toString()
+  //   };
 
-//   // Delete Data
-//   static Future<void> deleteItem(String subscriptionId) async {
-//     final db = await SQLHelper.db();
-//     try {
-//       await db.delete("items",
-//           where: "subscription_id = ?", whereArgs: [subscriptionId]);
-//     } catch (err) {
-//       debugPrint("Something went wrong when deleting an item: $err");
-//     }
-//   }
-// }
+  //   final result = await db.update('subscription', data,
+  //       where: "subscription_id = ?", whereArgs: [subscriptionId]);
+  //   return result;
+  // }
+
+  // // Delete Data
+  // static Future<void> deleteItem(String subscriptionId) async {
+  //   final db = await SQLHelper.db();
+  //   try {
+  //     await db.delete("subscription",
+  //         where: "subscription_id = ?", whereArgs: [subscriptionId]);
+  //   } catch (err) {
+  //     debugPrint("Something went wrong when deleting an item: $err");
+  //   }
+  // }
+}

@@ -60,12 +60,36 @@ class KursusTable {
         where: "kursus_id = ?", whereArgs: [id], limit: 1);
   }
 
+  static Future<List<Map<String, dynamic>>> getAllKursusById(int id) async {
+    // final db = await kursusTable.db();
+    final db = await MainDatabase.openDB();
+    return db.query('kursus',
+        where: "kursus_id = ?", whereArgs: [id]);
+  }
+
   static Future<List<Map<String, dynamic>>> getKursusbyKat(String kat) async {
     // final db = await kursusTable.db();
     final db = await MainDatabase.openDB();
     return db.query('kursus',
         where: "kategori = ?", whereArgs: [kat]);
   }
+
+  static Future<List<Map<String, dynamic>>> getKursusSubs(int userId) async {
+  final db = await MainDatabase.openDB();
+  
+  // Construct the SQL query with the join clause and WHERE clause
+  final query = '''
+    SELECT *
+    FROM kursus
+    INNER JOIN subscription ON kursus.kursus_id = subscription.kursus_id
+    WHERE subscription.user_id = ?
+  ''';
+  
+  // Execute the query with the parameter value
+  final results = await db.rawQuery(query, [userId]);
+  
+  return results;
+}
 
   //Update Data
   static Future<int> updateKursus(int id, String judul_kursus, kategori,

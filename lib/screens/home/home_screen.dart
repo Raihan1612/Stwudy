@@ -34,6 +34,7 @@ class HomeScreen extends StatefulWidget {
 class screen extends State<HomeScreen> {
   List<Map<String, dynamic>> _data = [];
   List<Map<String, dynamic>> _dataKursus = [];
+  List<Map<String, dynamic>> _dataSubs = [];
   bool _isLoading = true;
   int? _id;
 
@@ -47,9 +48,11 @@ class screen extends State<HomeScreen> {
   Future<void> _refreshJournals(int id) async {
     final data = await UserTable.getUser(id);
     final dataKursus = await KursusTable.getAllKursus();
+    final dataSubs = await SubsTable.getAllSubscriptionById(id);
     setState(() {
       _data = data;
       _dataKursus = dataKursus;
+      _dataSubs = dataSubs;
       _isLoading = false;
     });
   }
@@ -375,7 +378,7 @@ class screen extends State<HomeScreen> {
                           height: 165,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: card.length,
+                            itemCount: _dataSubs.length,
                             itemBuilder: (BuildContext context, int index) {
                               return Row(
                                 children: [
@@ -384,8 +387,12 @@ class screen extends State<HomeScreen> {
                                     child: InkWell(
                                       splashColor: Colors.purple.withAlpha(30),
                                       onTap: () {
+                                        UserSession.saveDataKursus(
+                                            _dataKursus[_dataSubs[index]
+                                                            ['kursus_id'] -
+                                                        1]['kursus_id']);
                                         Navigator.of(context).pushNamed(
-                                          card[index].navigation,
+                                          "/detail_course",
                                         );
                                       },
                                       child: SizedBox(
@@ -396,32 +403,44 @@ class screen extends State<HomeScreen> {
                                               MainAxisAlignment.center,
                                           children: [
                                             Image(
-                                                image: AssetImage(
-                                                    card[index].picture)),
+                                                image: AssetImage(_dataKursus[
+                                                    _dataSubs[index]
+                                                            ['kursus_id'] -
+                                                        1]['kursusImage'])),
                                             const SizedBox(
                                               height: 10,
                                             ),
                                             Row(
                                               children: [
                                                 Padding(
-                                                  padding: const EdgeInsets.all(4.0),
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
                                                   child: Column(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
                                                       Text(
-                                                        card[index].category,
+                                                        _dataKursus[_dataSubs[
+                                                                    index]
+                                                                ['kursus_id'] -
+                                                            1]['kategori'],
                                                         style: const TextStyle(
                                                             fontSize: 11,
                                                             fontWeight:
-                                                                FontWeight.w500),
+                                                                FontWeight
+                                                                    .w500),
                                                       ),
                                                       Text(
-                                                        card[index].title,
+                                                        _dataKursus[_dataSubs[
+                                                                    index]
+                                                                ['kursus_id'] -
+                                                            1]['judul_kursus'],
                                                         style: const TextStyle(
                                                             fontSize: 12,
                                                             fontWeight:
-                                                                FontWeight.w500),
+                                                                FontWeight
+                                                                    .w500),
                                                       ),
                                                     ],
                                                   ),
@@ -502,10 +521,12 @@ class screen extends State<HomeScreen> {
                                             Row(
                                               children: [
                                                 Padding(
-                                                  padding: const EdgeInsets.all(4.0),
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
                                                   child: Column(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
                                                       Text(
                                                         _dataKursus[index]
@@ -513,7 +534,8 @@ class screen extends State<HomeScreen> {
                                                         style: const TextStyle(
                                                             fontSize: 11,
                                                             fontWeight:
-                                                                FontWeight.w500),
+                                                                FontWeight
+                                                                    .w500),
                                                       ),
                                                       Text(
                                                         _dataKursus[index]
@@ -521,7 +543,8 @@ class screen extends State<HomeScreen> {
                                                         style: const TextStyle(
                                                             fontSize: 12,
                                                             fontWeight:
-                                                                FontWeight.w500),
+                                                                FontWeight
+                                                                    .w500),
                                                       ),
                                                     ],
                                                   ),

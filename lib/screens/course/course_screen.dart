@@ -1,6 +1,7 @@
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:tubes/database/kursus_database.dart';
+import 'package:tubes/database/subscription_database.dart';
 import 'package:tubes/sharePref/user_session.dart';
 
 class CourseScreen extends StatefulWidget {
@@ -12,26 +13,30 @@ class CourseScreen extends StatefulWidget {
 
 class screen extends State<CourseScreen> {
   List<Map<String, dynamic>> _dataKursus = [];
+  List<Map<String, dynamic>> _dataSubs = [];
   bool _isLoading = true;
-  int? _id;
+  int? id;
   String? kat;
 
   Future<void> loadId() async {
-    int? temp = await UserSession.getKursus();
+    int? temp1 = await UserSession.getId();
+    String? temp2 = await UserSession.getKategori();
     setState(() {
-      _id = temp;
+      id = temp1;
+      kat = temp2;
     });
   }
 
-  Future<void> loadKat() async {
-    String? temp = await UserSession.getKategori();
-    setState(() {
-      kat = temp;
-    });
-  }
+  // Future<void> loadKat() async {
+  //   String? temp = await UserSession.getKategori();
+  //   setState(() {
+  //     kat = temp;
+  //   });
+  // }
 
   Future<void> _refreshJournals(int id) async {
-    final dataKursus = await KursusTable.getKursus(id);
+    // final dataSubs = await SubsTable.getAllSubscriptionById(id);
+     final dataKursus = await KursusTable.getKursusSubs(id);
     setState(() {
       _dataKursus = dataKursus;
       _isLoading = false;
@@ -57,8 +62,9 @@ class screen extends State<CourseScreen> {
   @override
   void initState() {
     super.initState();
-    loadKat().then((_) {
+    loadId().then((_) {
       if (kat == "user") {
+        _refreshJournals(id!);
       } else if (kat == "other") {
         _refreshJournals3();
       } else {
