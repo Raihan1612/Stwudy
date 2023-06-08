@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tubes/database/kursus_database.dart';
 import 'package:tubes/database/subscription_database.dart';
 import 'package:tubes/database/video_database.dart';
+import 'package:tubes/database/wishlist_database.dart';
 import 'package:tubes/sharePref/user_session.dart';
 
 class DetailCourseScreen extends StatefulWidget {
@@ -30,7 +31,7 @@ class screen extends State<DetailCourseScreen> {
   }
 
   Future<void> _refreshJournals(int idUser, int idKursus) async {
-    final dataKursus = await KursusTable.getKursus(idUser);
+    final dataKursus = await KursusTable.getKursus(idKursus);
     final dataVideo = await VideoTable.getVideoByKursus(idUser);
     final dataSubs = await SubsTable.getSubscriptionById(idUser, idKursus);
     setState(() {
@@ -76,8 +77,8 @@ class screen extends State<DetailCourseScreen> {
                 onPressed: () {
                   SubsTable.createSubscription(idUser, idKursus);
                   Navigator.of(context).pushNamed(
-                          '/home',
-                        );
+                    '/home',
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.blue,
@@ -105,6 +106,8 @@ class screen extends State<DetailCourseScreen> {
         'kursus_id': 0,
       };
     }
+
+    _isSubscribe = _dataSubs.isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(
@@ -257,7 +260,14 @@ class screen extends State<DetailCourseScreen> {
               width: 5,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                WishlistTable.createWishlist(_idUser!, _idKursus!);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text("Course added to your wishlist."),
+                  ),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 primary: Colors.blue,
                 onPrimary: Colors.white,

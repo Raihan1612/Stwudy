@@ -113,7 +113,14 @@ class screen extends State<HomeScreen> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      const Icon(Icons.shopping_cart),
+                                      GestureDetector(
+                                          onTap: () {
+                                            Navigator.of(context).pushNamed(
+                                              '/wish',
+                                            );
+                                          },
+                                          child:
+                                              const Icon(Icons.shopping_cart)),
                                       const SizedBox(width: 15),
                                       GestureDetector(
                                         onTap: () {
@@ -124,9 +131,16 @@ class screen extends State<HomeScreen> {
                                         child: Container(
                                           width: 25,
                                           height: 25,
-                                          decoration: const BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.grey),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            color: Colors.white,
+                                            image: DecorationImage(
+                                              image: AssetImage(
+                                                  'assets/icons/Logo.png'),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
                                         ),
                                       )
                                     ],
@@ -144,25 +158,25 @@ class screen extends State<HomeScreen> {
                             fontSize: 22, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    Container(
-                      width: 330,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(59, 159, 162, 162),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          hintText: 'Search here ...',
-                        ),
-                      ),
-                    ),
+                    // const SizedBox(
+                    //   height: 16,
+                    // ),
+                    // Container(
+                    //   width: 330,
+                    //   height: 40,
+                    //   decoration: BoxDecoration(
+                    //     color: const Color.fromARGB(59, 159, 162, 162),
+                    //     borderRadius: BorderRadius.circular(100),
+                    //   ),
+                    //   child: TextField(
+                    //     decoration: InputDecoration(
+                    //       border: OutlineInputBorder(
+                    //         borderRadius: BorderRadius.circular(100),
+                    //       ),
+                    //       hintText: 'Search here ...',
+                    //     ),
+                    //   ),
+                    // ),
                     const SizedBox(height: 20),
                     Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -387,10 +401,9 @@ class screen extends State<HomeScreen> {
                                     child: InkWell(
                                       splashColor: Colors.purple.withAlpha(30),
                                       onTap: () {
-                                        UserSession.saveDataKursus(
-                                            _dataKursus[_dataSubs[index]
-                                                            ['kursus_id'] -
-                                                        1]['kursus_id']);
+                                        UserSession.saveDataKursus(_dataKursus[
+                                            _dataSubs[index]['kursus_id'] -
+                                                1]['kursus_id']);
                                         Navigator.of(context).pushNamed(
                                           "/detail_course",
                                         );

@@ -5,6 +5,7 @@ import 'package:tubes/database/kursus_database.dart';
 import 'package:tubes/database/subscription_database.dart';
 import 'package:tubes/database/user_database.dart';
 import 'package:tubes/database/video_database.dart';
+import 'package:tubes/database/wishlist_database.dart';
 
 class MainDatabase {
   static Future<sql.Database> openDB() async {
@@ -16,6 +17,7 @@ class MainDatabase {
       await KursusTable.createTables(db);
       await VideoTable.createTables(db);
       await SubsTable.createTables(db);
+      await WishlistTable.createTables(db);
       // Create other tables here
     });
   }

@@ -179,13 +179,16 @@ class screen extends State<UserProfileScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          width: 70,
-                          height: 70,
-                          child: ClipOval(
-                            child: CircleAvatar(radius: 50,backgroundColor: Colors.black12,),
+                          width: 96,
+                          height: 96,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: Colors.white,
+                            image: DecorationImage(
+                              image: AssetImage('assets/icons/Logo.png'),
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                          // decoration: const BoxDecoration(
-                          //     shape: BoxShape.circle, color: Colors.grey),
                         ),
                         SizedBox(
                           height: 10,
