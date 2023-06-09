@@ -8,6 +8,7 @@ import 'package:tubes/screens/profile/profile_screen.dart';
 import 'package:tubes/screens/register/register_screen.dart';
 import 'package:tubes/screens/splash/splash_screen.dart';
 import 'package:tubes/screens/videosc/video_screen.dart';
+import 'package:tubes/screens/wishlist/tes_wishlist.dart';
 import 'package:tubes/screens/wishlist/wishlist_screen.dart';
 import 'package:tubes/testData/test_data.dart';
 import 'package:tubes/testData/test_kursus.dart';
@@ -36,6 +37,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => VideoScreen());
       case '/wish':
         return MaterialPageRoute(builder: (_) => WishlistScreen());
+      case '/fav':
+        return MaterialPageRoute(builder: (_) => FavoriteCard());
       case '/test':
         return MaterialPageRoute(builder: (_) => testDB());
       case '/test2':

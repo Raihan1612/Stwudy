@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:tubes/database/kursus_database.dart';
@@ -36,6 +38,8 @@ class screen extends State<HomeScreen> {
   List<Map<String, dynamic>> _dataKursus = [];
   List<Map<String, dynamic>> _dataSubs = [];
   bool _isLoading = true;
+  bool _isDefault = true;
+  File? _imageFile;
   int? _id;
 
   Future<void> loadId() async {
@@ -75,6 +79,9 @@ class screen extends State<HomeScreen> {
         'user_id': 0,
       };
     }
+
+    _isDefault = user['userImage'] == 'assets/icons/Logo.png';
+
     final _screen = MediaQuery.of(context).size;
     return Scaffold(
       body: _isLoading
@@ -136,8 +143,12 @@ class screen extends State<HomeScreen> {
                                                 BorderRadius.circular(100),
                                             color: Colors.white,
                                             image: DecorationImage(
-                                              image: AssetImage(
-                                                  'assets/icons/Logo.png'),
+                                              image: _isDefault
+                                                  ? AssetImage(
+                                                      '${user['userImage']}')
+                                                  : FileImage(File(
+                                                          '${user['userImage']}'))
+                                                      as ImageProvider<Object>,
                                               fit: BoxFit.cover,
                                             ),
                                           ),

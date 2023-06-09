@@ -15,6 +15,7 @@ class screen extends State<WishlistScreen> {
   // All journals
   UserTable user = UserTable();
   List<Map<String, dynamic>> _journals = [];
+  bool isFavorite = true;
   bool _isLoading = true;
   int? _id;
 
@@ -208,7 +209,7 @@ class screen extends State<WishlistScreen> {
   void _deleteItem(int idUser, int idKursus) async {
     await WishlistTable.deleteWishlist(idUser, idKursus);
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Successfully deleted a journal!'),
+      content: Text('Successfully deleted a wishlist!'),
     ));
     _refreshJournals(idUser);
   }
@@ -217,7 +218,8 @@ class screen extends State<WishlistScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Wishlist', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold )),
+        title: const Text('Wishlist',
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         iconTheme: const IconThemeData(
@@ -231,36 +233,83 @@ class screen extends State<WishlistScreen> {
           : ListView.builder(
               itemCount: _journals.length,
               itemBuilder: (context, index) => Card(
-                color: Colors.white,
-                margin: const EdgeInsets.all(15),
-                child: ListTile(
-                    title: Text("${_journals[index]['judul_kursus']}"),
-                    subtitle: Text(_journals[index]['kategori']),
-                    trailing: SizedBox(
-                      width: 100,
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.shopping_cart_checkout),
-                            onPressed: () {
-                              showPaymentModal(
-                                  _id!, _journals[index]['kursus_id']);
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () => _deleteItem(
-                                _id!, _journals[index]['kursus_id']),
-                          ),
-                        ],
+                  color: Colors.white,
+                  margin: const EdgeInsets.all(15),
+                  child: Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: Image.asset(
+                          _journals[index]['kursusImage'],
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    )),
-              ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${_journals[index]['judul_kursus']}",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                isFavorite
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: isFavorite ? Colors.red : null,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  isFavorite = !isFavorite;
+                                });
+                                _deleteItem(
+                                    _id!, _journals[index]['kursus_id']);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )),
             ),
-      // floatingActionButton: FloatingActionButton(
-      //   child: const Icon(Icons.add),
-      //   onPressed: () => _showForm(null),
-      // ),
     );
   }
 }
+
+// ListTile(
+                  //     title: Text("${_journals[index]['judul_kursus']}"),
+                  //     subtitle: Text(_journals[index]['kategori']),
+                  //     trailing: SizedBox(
+                  //       width: 100,
+                  //       child: Row(
+                  //         children: [
+                  //           IconButton(
+                  //             icon: const Icon(Icons.shopping_cart_checkout),
+                  //             onPressed: () {
+                  //               showPaymentModal(
+                  //                   _id!, _journals[index]['kursus_id']);
+                  //             },
+                  //           ),
+                  //           IconButton(
+                  //             icon: const Icon(Icons.delete),
+                  //             onPressed: () => _deleteItem(
+                  //                 _id!, _journals[index]['kursus_id']),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     )),

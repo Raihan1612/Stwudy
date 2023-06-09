@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubes/database/subscription_database.dart';
 import 'package:tubes/database/user_database.dart';
 import 'package:tubes/sharePref/user_session.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:intl/intl.dart';
 
 class UserProfileScreen extends StatefulWidget {
   @override
@@ -12,6 +17,8 @@ class UserProfileScreen extends StatefulWidget {
 class screen extends State<UserProfileScreen> {
   List<Map<String, dynamic>> _data = [];
   bool _isLoading = true;
+  bool _isDefault = true;
+  File? _imageFile;
   int _id = -1;
 
   Future<void> loadId() async {
@@ -27,6 +34,37 @@ class screen extends State<UserProfileScreen> {
       _data = data;
       _isLoading = false;
     });
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile =
+        await ImagePicker().getImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<void> _saveImageToAssets(Map<String, dynamic> user, int id) async {
+    if (_imageFile == null) return;
+
+    final now = DateTime.now();
+    final formattedDate = DateFormat('yyyyMMdd_HHmmss').format(now);
+    final imageName = 'image_profile_$formattedDate.png';
+
+    final appDir = await getApplicationDocumentsDirectory();
+    final savedImage = await _imageFile!.copy('${appDir.path}/$imageName');
+    User u = User(
+        username: user['username'],
+        password: user['password'],
+        email: user['email'],
+        name: user['name'],
+        userImage: '${appDir.path}/$imageName');
+    _updateUser(id, u);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('Image saved to assets. ${appDir.path}'),
+    ));
   }
 
   @override
@@ -137,6 +175,41 @@ class screen extends State<UserProfileScreen> {
             ));
   }
 
+  Future<void> _uploadImageModal(int id, Map<String, dynamic> user) async {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          child: Wrap(
+            children: [
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _imageFile != null
+                        ? Image.file(_imageFile!)
+                        : Text('No image selected.'),
+                    ElevatedButton(
+                      onPressed: _pickImage,
+                      child: Text('Select Image'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        _saveImageToAssets(user, id);
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Save Image to Assets'),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   // Update an existing journal
   Future<void> _updateUser(int id, User user) async {
     await UserTable.updateUser(id, user);
@@ -155,6 +228,9 @@ class screen extends State<UserProfileScreen> {
         'user_id': 0,
       };
     }
+
+    _isDefault = user['userImage'] == 'assets/icons/Logo.png';
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
@@ -185,8 +261,23 @@ class screen extends State<UserProfileScreen> {
                             borderRadius: BorderRadius.circular(100),
                             color: Colors.white,
                             image: DecorationImage(
-                              image: AssetImage('assets/icons/Logo.png'),
+                              image: _isDefault
+                                  ? AssetImage('${user['userImage']}')
+                                  : FileImage(File('${user['userImage']}'))
+                                      as ImageProvider<Object>,
                               fit: BoxFit.cover,
+                            ),
+                          ),
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(55, 70, 0, 0),
+                              child: IconButton(
+                                icon: Icon(Icons.edit),
+                                onPressed: () {
+                                  _uploadImageModal(user['user_id'], user);
+                                },
+                              ),
                             ),
                           ),
                         ),
@@ -194,6 +285,7 @@ class screen extends State<UserProfileScreen> {
                           height: 10,
                         ),
                         Text("${user['name']}")
+                        // Text("$_isDefault")
                       ]),
                 ),
               ),

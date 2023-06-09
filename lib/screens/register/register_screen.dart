@@ -128,7 +128,8 @@ class Screen extends State<RegisterScreen> {
                           username: _usernameController.text,
                           password: _passwordController.text,
                           email:  _emailController.text,
-                          name: _nameController.text
+                          name: _nameController.text,
+                          userImage: "assets/icons/Logo.png"
                         );
                         await UserTable.createUser(user);
                         Navigator.of(context).pushNamed(
