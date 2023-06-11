@@ -36,12 +36,14 @@ class screen extends State<UserProfileScreen> {
     });
   }
 
-  Future<void> _pickImage() async {
+  Future<void> _pickImage(int id, Map<String, dynamic> user) async {
     final pickedFile =
         await ImagePicker().getImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _imageFile = File(pickedFile.path);
+        Navigator.of(context).pop();
+        _uploadImageModal(id, user);
       });
     }
   }
@@ -80,7 +82,7 @@ class screen extends State<UserProfileScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
 
-  void _showForm(int? id, int key) async {
+  void _showForm(int? id, int key, String imgP) async {
     if (id != null) {
       // id == null -> create new item
       // id != null -> update an existing item
@@ -137,7 +139,8 @@ class screen extends State<UserProfileScreen> {
                               username: _usernameController.text,
                               password: _passwordController.text,
                               email: _emailController.text,
-                              name: _nameController.text);
+                              name: _nameController.text,
+                              userImage: imgP);
 
                           if (id != null) {
                             await _updateUser(id, user);
@@ -175,6 +178,85 @@ class screen extends State<UserProfileScreen> {
             ));
   }
 
+  void _showFAQModal() {
+    showModalBottomSheet(
+        context: context,
+        builder: (_) => Container(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    'Frequently Asked Questions',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    'Q: What is Stwudy?',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'A: Stwudy is an e-learning application designed to provide a comprehensive platform for online education.',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    'Q: Is Stwudy available on multiple platforms?',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'A: Yes, Stwudy is available on both iOS and Android platforms.',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  // Add more questions and answers as needed
+                ],
+              ),
+            ));
+  }
+
+  void _showHelpdeskModal() {
+    showModalBottomSheet(
+        context: context,
+        builder: (_) => Container(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                children: const [
+                  Text(
+                    'Help Desk',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 16.0),
+                  Text(
+                    'If you need assistance or have any questions, '
+                    'please contact our help desk at:',
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 8.0),
+                  Text(
+                    'stwudy@gmail.com',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ],
+              ),
+            ));
+  }
+
   Future<void> _uploadImageModal(int id, Map<String, dynamic> user) async {
     showModalBottomSheet(
       context: context,
@@ -190,7 +272,9 @@ class screen extends State<UserProfileScreen> {
                         ? Image.file(_imageFile!)
                         : Text('No image selected.'),
                     ElevatedButton(
-                      onPressed: _pickImage,
+                      onPressed: () {
+                        _pickImage(id, user);
+                      },
                       child: Text('Select Image'),
                     ),
                     ElevatedButton(
@@ -198,7 +282,7 @@ class screen extends State<UserProfileScreen> {
                         _saveImageToAssets(user, id);
                         Navigator.of(context).pop();
                       },
-                      child: Text('Save Image to Assets'),
+                      child: Text('Set Image as Profile'),
                     ),
                   ],
                 ),
@@ -221,18 +305,27 @@ class screen extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> user;
+    String imgPath = 'assets/icons/Logo.png';
     if (!_data.isEmpty) {
       user = _data[0];
+      imgPath = user['userImage'];
     } else {
       user = {
         'user_id': 0,
       };
     }
-
     _isDefault = user['userImage'] == 'assets/icons/Logo.png';
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).popAndPushNamed(
+              '/home',
+            );
+          },
+        ),
         iconTheme: const IconThemeData(
           color: Colors.black, // Change arrow color here
         ),
@@ -295,7 +388,7 @@ class screen extends State<UserProfileScreen> {
               child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
                 onTap: () {
-                  _showForm(user['user_id'], 1);
+                  _showForm(user['user_id'], 1, imgPath);
                 },
                 child: SizedBox(
                     width: double.infinity,
@@ -314,7 +407,7 @@ class screen extends State<UserProfileScreen> {
               child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
                 onTap: () {
-                  _showForm(user['user_id'], 2);
+                  _showForm(user['user_id'], 2, imgPath);
                 },
                 child: SizedBox(
                     width: double.infinity,
@@ -336,7 +429,7 @@ class screen extends State<UserProfileScreen> {
               child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
                 onTap: () {
-                  _showForm(user['user_id'], 3);
+                  _showForm(user['user_id'], 3, imgPath);
                 },
                 child: SizedBox(
                     width: double.infinity,
@@ -358,7 +451,7 @@ class screen extends State<UserProfileScreen> {
               child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
                 onTap: () {
-                  _showForm(user['user_id'], 4);
+                  _showForm(user['user_id'], 4, imgPath);
                 },
                 child: SizedBox(
                     width: double.infinity,
@@ -379,7 +472,9 @@ class screen extends State<UserProfileScreen> {
               clipBehavior: Clip.hardEdge,
               child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
-                onTap: () {},
+                onTap: () {
+                  _showFAQModal();
+                },
                 child: SizedBox(
                     width: double.infinity,
                     height: 70,
@@ -396,7 +491,9 @@ class screen extends State<UserProfileScreen> {
               clipBehavior: Clip.hardEdge,
               child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
-                onTap: () {},
+                onTap: () {
+                  _showHelpdeskModal();
+                },
                 child: SizedBox(
                     width: double.infinity,
                     height: 70,

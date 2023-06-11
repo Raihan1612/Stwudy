@@ -32,7 +32,7 @@ class screen extends State<DetailCourseScreen> {
 
   Future<void> _refreshJournals(int idUser, int idKursus) async {
     final dataKursus = await KursusTable.getKursus(idKursus);
-    final dataVideo = await VideoTable.getVideoByKursus(idUser);
+    final dataVideo = await VideoTable.getVideoByKursus(idKursus);
     final dataSubs = await SubsTable.getSubscriptionById(idUser, idKursus);
     setState(() {
       _dataKursus = dataKursus;
@@ -179,6 +179,10 @@ class screen extends State<DetailCourseScreen> {
                                 splashColor: Colors.purple.withAlpha(30),
                                 onTap: _isSubscribe
                                     ? () {
+                                        UserSession.saveDataVideo(
+                                            _dataVideo[index]['video_id']);
+                                        UserSession.saveLinkVideo(
+                                            _dataVideo[index]['link_video']);
                                         Navigator.of(context).pushNamed(
                                           '/video',
                                         );
@@ -191,6 +195,7 @@ class screen extends State<DetailCourseScreen> {
                                                 "You are not subscribed to this course."),
                                           ),
                                         );
+                                        showPaymentModal(_idUser!, _idKursus!);
                                       },
                                 child: Container(
                                   height: 60,

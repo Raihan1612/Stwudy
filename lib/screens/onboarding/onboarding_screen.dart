@@ -88,7 +88,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                 children: [
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed(
+                      Navigator.of(context).pushReplacementNamed(
                         '/login',
                       );
                     },
@@ -132,7 +132,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                   TextButton(
                     onPressed: () {
                       if (currentIndex == 2) {
-                        Navigator.of(context).pushNamed(
+                        Navigator.of(context).pushReplacementNamed(
                           '/login',
                         );
                       } else {

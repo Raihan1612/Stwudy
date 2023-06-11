@@ -26,7 +26,7 @@ class WishlistTable {
     return id;
   }
 
-  // Get Specified Data
+  // Get All Wishlist by user  id
   static Future<List<Map<String, dynamic>>> getAllWishlistById(
       int userId) async {
     final db = await MainDatabase.openDB();
@@ -34,7 +34,7 @@ class WishlistTable {
         where: "user_id = ?", whereArgs: [userId]);
   }
 
-  // Get Specified Data
+  // Get wishlist by user id dan kursus id
   static Future<List<Map<String, dynamic>>> getWishlistById(
       int userId, int kursusId) async {
     final db = await MainDatabase.openDB();

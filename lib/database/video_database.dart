@@ -27,15 +27,15 @@ class VideoTable {
   // }
 
   //Insert Table
-  static Future<int> createVideo(
-      int kursus_id, String judul_video, String? deskripsi_video, String link_video) async {
+  static Future<int> createVideo(int kursus_id, String judul_video,
+      String? deskripsi_video, String link_video) async {
     final db = await MainDatabase.openDB();
 
     final data = {
       'kursus_id': kursus_id,
       'judul_video': judul_video,
       'deskripsi_video': deskripsi_video,
-      'link_video' : link_video
+      'link_video': link_video
     };
     final id = await db.insert('video', data,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
@@ -48,7 +48,7 @@ class VideoTable {
     return db.query('video', orderBy: "video_id");
   }
 
-  //Get Specified Data
+  //Get Video by video_id
   static Future<List<Map<String, dynamic>>> getVideo(int id) async {
     final db = await MainDatabase.openDB();
     return db.query('video', where: "video_id = ?", whereArgs: [id], limit: 1);
@@ -69,7 +69,7 @@ class VideoTable {
       'kursus_id': kursus_id,
       'judul_video': judul_video,
       'deskripsi_video': deskripsi_video,
-      'link_video' : link_video
+      'link_video': link_video
     };
 
     final result =

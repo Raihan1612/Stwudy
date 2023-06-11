@@ -15,7 +15,6 @@ class screen extends State<WishlistScreen> {
   // All journals
   UserTable user = UserTable();
   List<Map<String, dynamic>> _journals = [];
-  bool isFavorite = true;
   bool _isLoading = true;
   int? _id;
 
@@ -49,118 +48,6 @@ class screen extends State<WishlistScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _imageController = TextEditingController();
 
-  // This function will be triggered when the floating button is pressed
-  // It will also be triggered when you want to update an item
-  // void _showForm(int? id) async {
-  //   if (id != null) {
-  //     // id == null -> create new item
-  //     // id != null -> update an existing item
-  //     final existingJournal =
-  //         _journals.firstWhere((element) => element['user_id'] == id);
-  //     _usernameController.text = existingJournal['username'];
-  //     _passwordController.text = existingJournal['password'];
-  //     _emailController.text = existingJournal['email'];
-  //     _nameController.text = existingJournal['name'];
-  //     if (existingJournal['userImage'] != null) {
-  //       _imageController.text = existingJournal['userImage'];
-  //     }
-  //   }
-
-  //   showModalBottomSheet(
-  //       context: context,
-  //       elevation: 5,
-  //       isScrollControlled: true,
-  //       builder: (_) => Container(
-  //             padding: EdgeInsets.only(
-  //               top: 15,
-  //               left: 15,
-  //               right: 15,
-  //               // this will prevent the soft keyboard from covering the text fields
-  //               bottom: MediaQuery.of(context).viewInsets.bottom + 120,
-  //             ),
-  //             child: Column(
-  //               mainAxisSize: MainAxisSize.min,
-  //               crossAxisAlignment: CrossAxisAlignment.end,
-  //               children: [
-  //                 TextField(
-  //                   controller: _nameController,
-  //                   decoration: const InputDecoration(hintText: 'Title'),
-  //                 ),
-  //                 const SizedBox(
-  //                   height: 10,
-  //                 ),
-  //                 TextField(
-  //                   controller: _emailController,
-  //                   decoration: const InputDecoration(hintText: 'Description'),
-  //                 ),
-  //                 const SizedBox(
-  //                   height: 20,
-  //                 ),
-  //                 TextField(
-  //                   controller: _usernameController,
-  //                   decoration: const InputDecoration(hintText: 'Description'),
-  //                 ),
-  //                 const SizedBox(
-  //                   height: 20,
-  //                 ),
-  //                 TextField(
-  //                   controller: _passwordController,
-  //                   decoration: const InputDecoration(hintText: 'Description'),
-  //                 ),
-  //                 const SizedBox(
-  //                   height: 20,
-  //                 ),
-  //                 TextField(
-  //                   controller: _imageController,
-  //                   decoration: const InputDecoration(hintText: 'Description'),
-  //                 ),
-  //                 const SizedBox(
-  //                   height: 20,
-  //                 ),
-  //                 ElevatedButton(
-  //                   onPressed: () async {
-  //                     // Save new journal
-  //                     User user = User(
-  //                       username: _usernameController.text,
-  //                       password: _passwordController.text,
-  //                       email: _emailController.text,
-  //                       name: _nameController.text,
-  //                     );
-  //                     if (id == null) {
-  //                       await _addItem(user);
-  //                     }
-
-  //                     if (id != null) {
-  //                       await _updateItem(id, user);
-  //                     }
-
-  //                     // Clear the text fields
-  //                     _usernameController.text = '';
-  //                     _passwordController.text = '';
-  //                     _emailController.text = '';
-  //                     _nameController.text = '';
-
-  //                     // Close the bottom sheet
-  //                     Navigator.of(context).pop();
-  //                   },
-  //                   child: Text(id == null ? 'Create New' : 'Update'),
-  //                 )
-  //               ],
-  //             ),
-  //           ));
-  // }
-
-// // Insert a new journal to the database
-//   Future<void> _addItem(User user) async {
-//     await UserTable.createUser(user);
-//     _refreshJournals();
-//   }
-
-//   // Update an existing journal
-//   Future<void> _updateItem(int id, User user) async {
-//     await UserTable.updateUser(id, user);
-//     _refreshJournals();
-//   }
   void showPaymentModal(int idUser, int idKursus) {
     showModalBottomSheet(
       context: context,
@@ -232,61 +119,68 @@ class screen extends State<WishlistScreen> {
             )
           : ListView.builder(
               itemCount: _journals.length,
-              itemBuilder: (context, index) => Card(
-                  color: Colors.white,
-                  margin: const EdgeInsets.all(15),
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: Image.asset(
-                          _journals[index]['kursusImage'],
-                          width: 80,
-                          height: 80,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "${_journals[index]['judul_kursus']}",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+              itemBuilder: (context, index) {
+                // bool isFavorite = true;
+                return Card(
+                    color: Colors.white,
+                    margin: const EdgeInsets.all(15),
+                    child: InkWell(
+                      splashColor: Colors.purple.withAlpha(30),
+                      onTap: () {
+                        UserSession.saveDataKursus(_journals[index]['kursus_id']);
+                        Navigator.of(context).pushNamed(
+                          '/detail_course',
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: Image.asset(
+                              _journals[index]['kursusImage'],
+                              width: 80,
+                              height: 80,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${_journals[index]['judul_kursus']}",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                    ],
                                   ),
-                                  SizedBox(height: 8),
-                                ],
-                              ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.favorite,
+                                    color: Colors.red,
+                                  ),
+                                  onPressed: () {
+                                    _deleteItem(
+                                        _id!, _journals[index]['kursus_id']);
+                                  },
+                                ),
+                              ],
                             ),
-                            IconButton(
-                              icon: Icon(
-                                isFavorite
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: isFavorite ? Colors.red : null,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  isFavorite = !isFavorite;
-                                });
-                                _deleteItem(
-                                    _id!, _journals[index]['kursus_id']);
-                              },
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  )),
-            ),
+                    ));
+              }),
     );
   }
 }

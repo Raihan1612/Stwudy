@@ -16,7 +16,7 @@ class User {
     required this.email,
     required this.name,
     String? userImage,
-  }) : userImage = userImage ?? 'assets/images/profile.png';
+  }) : userImage = userImage ?? 'assets/icons/Logo.png';
 
   Map<String, dynamic> toMap() {
     return {
