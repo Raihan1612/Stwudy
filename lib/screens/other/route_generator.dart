@@ -3,6 +3,8 @@ import 'package:tubes/screens/course/course_screen.dart';
 import 'package:tubes/screens/home/home_screen.dart';
 import 'package:tubes/screens/login/login_screen.dart';
 import 'package:tubes/screens/detail_course/detail_screen.dart';
+import 'package:tubes/screens/maps/detail_map.dart';
+import 'package:tubes/screens/maps/map_screen.dart';
 import 'package:tubes/screens/onboarding/onboarding_screen.dart';
 import 'package:tubes/screens/profile/profile_screen.dart';
 import 'package:tubes/screens/register/register_screen.dart';
@@ -15,8 +17,6 @@ import 'package:tubes/testData/test_video.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    // Getting arguments passed in while calling Navigator.pushNamed
-
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => SplashScreen());
@@ -36,6 +36,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => VideoScreen());
       case '/wish':
         return MaterialPageRoute(builder: (_) => WishlistScreen());
+      case '/map':
+        return MaterialPageRoute(builder: (_) => MapScreen());
+      case '/detail_map':
+        return MaterialPageRoute(builder: (_) => DetailMapScreen());
       case '/test':
         return MaterialPageRoute(builder: (_) => testDB());
       case '/test2':
@@ -43,7 +47,6 @@ class RouteGenerator {
       case '/test3':
         return MaterialPageRoute(builder: (_) => testVideo());
       default:
-        // If there is no such named route in the switch statement, e.g. /third
         return _errorRoute();
     }
   }

@@ -121,9 +121,6 @@ class Screen extends State<RegisterScreen> {
                               borderRadius: BorderRadius.circular(20))),
                       child: const Text('Register'),
                       onPressed: () async {
-                        // print(nameController.text);
-                        // print(passwordController.text);
-                        // Save new journal
                         User user = User(
                           username: _usernameController.text,
                           password: _passwordController.text,
@@ -135,9 +132,6 @@ class Screen extends State<RegisterScreen> {
                         Navigator.of(context).pushNamed(
                         '/login',
                       );
-                        // Navigator.of(context).pushNamed(
-                        //   '/login',
-                        // );
                       },
                     )),
                 Row(

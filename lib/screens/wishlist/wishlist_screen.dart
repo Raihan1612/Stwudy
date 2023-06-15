@@ -120,7 +120,6 @@ class screen extends State<WishlistScreen> {
           : ListView.builder(
               itemCount: _journals.length,
               itemBuilder: (context, index) {
-                // bool isFavorite = true;
                 return Card(
                     color: Colors.white,
                     margin: const EdgeInsets.all(15),

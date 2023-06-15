@@ -586,7 +586,14 @@ class screen extends State<HomeScreen> {
                           ),
                         ),
                       ],
-                    )
+                    ),
+                    SizedBox(height: 30,),
+                    Text("Finding Offline Course?", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),),
+                    TextButton(onPressed: () {
+                      Navigator.of(context).pushNamed(
+                                          "/map",
+                                        );
+                    }, child: Text("click here", style: TextStyle(fontSize: 13,color: Colors.blue),)),
                   ],
                 ),
               ),

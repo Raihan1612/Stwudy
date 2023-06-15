@@ -43,6 +43,14 @@ dependencies:
   youtube_player_flutter: ^8.1.2
   image_picker:
   intl:
+  flutter_map:
+  latlong2: 
+  url_launcher: 
+  cloud_firestore: 
+  firebase_database: 
+  firebase_core: 
+  firebase_auth:  
+  firebase_storage: 
 
 dev_dependencies:
   flutter_test:

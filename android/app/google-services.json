@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "760435911748",
+    "project_id": "mapstwudy",
+    "storage_bucket": "mapstwudy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:760435911748:android:22f71bd181817131496011",
+        "android_client_info": {
+          "package_name": "com.example.tubes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "760435911748-c4trt6m7us9nh1hpf569ijrefua25vqr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZHnXFM-WG9iEkEmO2VNPEvMYBd6aWEIM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "760435911748-c4trt6m7us9nh1hpf569ijrefua25vqr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

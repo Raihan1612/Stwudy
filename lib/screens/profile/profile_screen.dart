@@ -48,6 +48,17 @@ class screen extends State<UserProfileScreen> {
     }
   }
 
+  Future<void> _pickImageCamera(int id, Map<String, dynamic> user) async {
+    final pickedFile = await ImagePicker().getImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+        Navigator.of(context).pop();
+        _uploadImageModal(id, user);
+      });
+    }
+  }
+
   Future<void> _saveImageToAssets(Map<String, dynamic> user, int id) async {
     if (_imageFile == null) return;
 
@@ -84,8 +95,6 @@ class screen extends State<UserProfileScreen> {
 
   void _showForm(int? id, int key, String imgP) async {
     if (id != null) {
-      // id == null -> create new item
-      // id != null -> update an existing item
       final existingJournal =
           _data.firstWhere((element) => element['user_id'] == id);
       _usernameController.text = existingJournal['username'];
@@ -103,7 +112,6 @@ class screen extends State<UserProfileScreen> {
                 top: 15,
                 left: 15,
                 right: 15,
-                // this will prevent the soft keyboard from covering the text fields
                 bottom: MediaQuery.of(context).viewInsets.bottom + 50,
               ),
               child: Column(
@@ -269,13 +277,32 @@ class screen extends State<UserProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _imageFile != null
-                        ? Image.file(_imageFile!)
+                        ? Container(
+                            width: 96, // Set the desired width
+                            height: 96, // Set the desired height
+                            child: Image.file(_imageFile!),
+                          )
                         : Text('No image selected.'),
-                    ElevatedButton(
-                      onPressed: () {
-                        _pickImage(id, user);
-                      },
-                      child: Text('Select Image'),
+                    Text("Select Image From:"),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            _pickImage(id, user);
+                          },
+                          child: Text('Gallery'),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            _pickImageCamera(id, user);
+                          },
+                          child: Text('Camera'),
+                        ),
+                      ],
                     ),
                     ElevatedButton(
                       onPressed: () {
